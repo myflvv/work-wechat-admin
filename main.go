@@ -6,7 +6,12 @@ import (
 )
 
 func main()  {
-	_=model.DB.AutoMigrate(model.User{},&model.Role{})
+	_=model.DB.AutoMigrate(
+		model.User{},
+		&model.Role{},
+		model.Permission{},
+		model.RolePermissionRelation{},
+		)
 	token,err:=model.CreateToken(100)
 	if err!=nil {
 		log.Println(err)

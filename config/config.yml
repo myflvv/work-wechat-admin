@@ -1,8 +1,8 @@
 db:
   name: work_wechat
-  host: 10.10.112.195
+  host: 127.0.0.1
   user: root
-  pass: 111222
+  pass: 1q2w3e
   maxidleconns: 8
   maxopenconns: 16
   maxlifetime: 120

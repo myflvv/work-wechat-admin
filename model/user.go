@@ -11,7 +11,8 @@ type DefaultField struct {
 
 type User struct {
 	DefaultField
-	UserId string `json:"user_id" gorm:"type:varchar(50)"` //微信userid
+	WechatUserId string `json:"wechat_user_id" gorm:"type:varchar(50)"` //微信userid
 	Username string `json:"username" gorm:"type:varchar(50)"`
 	Password string `json:"password" gorm:"type:varchar(50)"`
+	RoleId int `json:"role_id" gorm:"type:int(10)"`
 }
