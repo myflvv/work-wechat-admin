@@ -1,0 +1,8 @@
+db:
+  name: work_wechat
+  host: 10.10.112.195
+  user: root
+  pass: 111222
+  maxidleconns: 8
+  maxopenconns: 16
+  maxlifetime: 120
