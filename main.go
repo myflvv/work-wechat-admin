@@ -16,15 +16,16 @@ func main()  {
 		&model.Group{},
 		)
 
-	r := gin.Default()
-	verRouter := r.Group("api/v1")
+	router := gin.Default()
+	v := router.Group("api/v1")
 	{
-		verRouter.GET("group/:id",api.FindGroup)
-		verRouter.POST("group",api.CreateGroup)
-		verRouter.PUT("group/:id",api.UpdateGroup)
-		verRouter.DELETE("group/:id",api.DeleteGroup)
+		v.GET("group/:id",api.DetailGroup)
+		v.GET("group",api.SelectGroup)
+		v.POST("group",api.CreateGroup)
+		v.PUT("group/:id",api.UpdateGroup)
+		v.DELETE("group/:id",api.DeleteGroup)
 	}
-	log.Fatal(r.Run(":8080"))
+	log.Fatal(router.Run(":8080"))
 	//token,err:=model.CreateToken(100)
 	//if err!=nil {
 	//	log.Println(err)
