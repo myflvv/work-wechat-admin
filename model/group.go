@@ -1,10 +1,20 @@
 package model
 
+import (
+	"time"
+)
+
 type Group struct {
 	DefaultField
 	Name    string `json:"name" gorm:"type:varchar(20)" form:"name" binding:"required" label:"名称"`
 	Disable *int   `json:"disable" gorm:"type:tinyint(1);default:0" form:"disable" binding:"required" label:"是否禁用"`
 }
+
+type GroupResp struct {
+	Group
+	FormatCreatedAt string `json:"format_create_time"`
+	FormatUpdatedAt string `json:"format_updated_time"`
+} 
 
 func (p *Group) Create() error {
 	r := DB.Create(p)
@@ -21,7 +31,11 @@ func (p *Group) Delete() error {
 	return r.Error
 }
 
-func (p *Group) Detail() (*Group, error) {
+func (p *Group) Detail() (*GroupResp, error) {
 	r := DB.First(&p)
-	return p, r.Error
+	var resp GroupResp
+	resp.Group=*p
+	resp.FormatCreatedAt = time.Unix(p.CreatedAt,0).Format("2006-01-02 15:04:05")
+	resp.FormatUpdatedAt= time.Unix(p.UpdatedAt,0).Format("2006-01-02 15:04:05")
+	return &resp, r.Error
 }

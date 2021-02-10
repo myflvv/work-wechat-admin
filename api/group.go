@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"time"
 	"work-wechat-admin/model"
 	"work-wechat-admin/utils"
 )
@@ -80,14 +81,27 @@ func DetailGroup(c *gin.Context) {
 type selectResp struct {
 	Page     int           `json:"page"`
 	PageSize int           `json:"page_size"`
-	Total    int           `json:"total"`
+	Total    int64           `json:"total"`
+	TotalPage int `json:"total_page"`
 	Result   []model.Group `json:"result"`
 }
+
 
 func SelectGroup(c *gin.Context) {
 	var groups selectResp
 	groups.Page, _ = strconv.Atoi(c.Query("page"))
 	groups.PageSize, _ = strconv.Atoi(c.Query("page_size"))
+	if groups.Page==0 {
+		groups.Page=1
+	}
+	if groups.PageSize>30 || groups.PageSize==0 {
+		groups.PageSize=10
+	}
+	model.DB.Model(&groups.Result).Count(&groups.Total)
 	model.DB.Limit(groups.PageSize).Offset((groups.Page - 1) * groups.PageSize).Find(&groups.Result)
+	for k,v:=range groups.Result{
+		s:=time.Unix(v.CreatedAt,0).Format("2006-01-02 15:04:05")
+		groups.Result[k].FormatCreatedAt=s
+	}
 	utils.RespJsonOk("", groups, c)
 }

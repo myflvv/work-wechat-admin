@@ -9,6 +9,10 @@ type Role struct {
 	GroupId *int `json:"group_id" grom:"type:int(10);default:0"`
 }
 
-func (r *Role)Insert()  {
+func (r *Role)Create()  {
 
+}
+
+func (r *Role)Update()  {
+	
 }
