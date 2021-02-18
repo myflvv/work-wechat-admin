@@ -19,11 +19,17 @@ func main()  {
 	router := gin.Default()
 	v := router.Group("api/v1")
 	{
-		v.GET("group/:id",api.DetailGroup)
-		v.GET("group",api.ListGroup)
 		v.POST("group",api.CreateGroup)
 		v.PUT("group/:id",api.UpdateGroup)
 		v.DELETE("group/:id",api.DeleteGroup)
+		v.GET("group/:id",api.DetailGroup)
+		v.GET("group",api.ListGroup)
+
+		v.POST("role",api.CreateRole)
+		v.PUT("role/:id",api.UpdateRole)
+		v.DELETE("role/:id",api.DeleteRole)
+		v.GET("role/:id",api.DetailRole)
+		v.GET("role",api.ListRole)
 	}
 	log.Fatal(router.Run(":8080"))
 	//token,err:=model.CreateToken(100)
