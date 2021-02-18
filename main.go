@@ -30,6 +30,11 @@ func main()  {
 		v.DELETE("role/:id",api.DeleteRole)
 		v.GET("role/:id",api.DetailRole)
 		v.GET("role",api.ListRole)
+
+		v.POST("permission",api.CreatePermission)
+		v.PUT("permission/:id",api.UpdatePermission)
+		v.DELETE("permission/:id",api.DeletePermission)
+		v.GET("permission",api.ListPermission)
 	}
 	log.Fatal(router.Run(":8080"))
 	//token,err:=model.CreateToken(100)

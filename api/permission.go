@@ -11,8 +11,8 @@ import (
 	"work-wechat-admin/utils"
 )
 
-func CreateRole(c *gin.Context)  {
-	var p model.Role
+func CreatePermission(c *gin.Context)  {
+	var p model.Permission
 	err := utils.TranslateZhError(c.ShouldBind(&p))
 	if err != nil {
 		utils.RespJsonError(http.StatusBadRequest, utils.Error_LackParams, err, c)
@@ -26,13 +26,13 @@ func CreateRole(c *gin.Context)  {
 	utils.RespJsonOk("success", nil, c)
 }
 
-func UpdateRole(c *gin.Context) {
+func UpdatePermission(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	if id == 0 {
 		utils.RespJsonError(http.StatusBadRequest, utils.Error_LackParams, errors.New("缺少ID"), c)
 		return
 	}
-	var p model.Role
+	var p model.Permission
 	err := utils.TranslateZhError(c.ShouldBind(&p))
 	if err != nil {
 		utils.RespJsonError(http.StatusBadRequest, utils.Error_LackParams, err, c)
@@ -47,13 +47,13 @@ func UpdateRole(c *gin.Context) {
 	utils.RespJsonOk("success", r, c)
 }
 
-func DeleteRole(c *gin.Context) {
+func DeletePermission(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	if id == 0 {
 		utils.RespJsonError(http.StatusBadRequest, utils.Error_LackParams, errors.New("缺少ID"), c)
 		return
 	}
-	var p model.Role
+	var p model.Permission
 	p.ID = uint(id)
 	err := p.Delete()
 	if err != nil {
@@ -63,34 +63,18 @@ func DeleteRole(c *gin.Context) {
 	utils.RespJsonOk("success", nil, c)
 }
 
-func DetailRole(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	if id == 0 {
-		utils.RespJsonError(http.StatusBadRequest, utils.Error_LackParams, errors.New("缺少ID"), c)
-		return
-	}
-	var p model.Role
-	p.ID = uint(id)
-	r, err := p.Detail()
-	if err != nil {
-		utils.RespJsonError(http.StatusInternalServerError, utils.Error_Server, err, c)
-		return
-	}
-	utils.RespJsonOk("success", r, c)
-}
-
-type selectRoleResp struct {
+type selectPermissionResp struct {
 	Page     int           `json:"page"`
 	PageSize int           `json:"page_size"`
 	Total    int64           `json:"total"`
 	TotalPage int `json:"total_page"`
-	Result   []model.RoleResp `json:"result"`
+	Result   []model.PermissionResp `json:"result"`
 }
 
 //分页
-func ListRole(c *gin.Context) {
-	var result selectRoleResp
-	var resultSlice []model.Role
+func ListPermission(c *gin.Context) {
+	var result selectPermissionResp
+	var resultSlice []model.Permission
 	result.Page, _ = strconv.Atoi(c.Query("page"))
 	result.PageSize, _ = strconv.Atoi(c.Query("page_size"))
 	if result.Page==0 {
@@ -102,16 +86,17 @@ func ListRole(c *gin.Context) {
 	model.DB.Model(&resultSlice).Count(&result.Total)
 	model.DB.Limit(result.PageSize).Offset((result.Page - 1) * result.PageSize).Find(&resultSlice)
 	result.TotalPage=int(math.Ceil(float64(float64(result.Total)/float64(result.PageSize))))
-	ef:=make([]model.RoleResp,len(resultSlice))
+	ef:=make([]model.PermissionResp,len(resultSlice))
 	for k,v:=range resultSlice{
 		createAt:=time.Unix(v.CreatedAt,0).Format("2006-01-02 15:04:05")
 		updateAt:=time.Unix(v.UpdatedAt,0).Format("2006-01-02 15:04:05")
 		ef[k].FormatCreatedAt=createAt
 		ef[k].FormatUpdatedAt=updateAt
-		ef[k].Name=v.Name
-		ef[k].Disable=v.Disable
-		ef[k].Tag=v.Tag
-		ef[k].Remark=v.Remark
+		ef[k].Title=v.Title
+		ef[k].Method=v.Method
+		ef[k].Path=v.Path
+		ef[k].Pid=v.Pid
+		ef[k].Validate=v.Validate
 		ef[k].GroupId=v.GroupId
 		ef[k].ID=v.ID
 	}
