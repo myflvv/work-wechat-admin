@@ -20,7 +20,7 @@ func main()  {
 	v := router.Group("api/v1")
 	{
 		v.GET("group/:id",api.DetailGroup)
-		v.GET("group",api.SelectGroup)
+		v.GET("group",api.ListGroup)
 		v.POST("group",api.CreateGroup)
 		v.PUT("group/:id",api.UpdateGroup)
 		v.DELETE("group/:id",api.DeleteGroup)

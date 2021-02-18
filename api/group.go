@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"math"
 	"net/http"
 	"strconv"
 	"time"
@@ -83,12 +84,13 @@ type selectResp struct {
 	PageSize int           `json:"page_size"`
 	Total    int64           `json:"total"`
 	TotalPage int `json:"total_page"`
-	Result   []model.Group `json:"result"`
+	Result   []model.GroupResp `json:"result"`
 }
 
-
-func SelectGroup(c *gin.Context) {
+//分页
+func ListGroup(c *gin.Context) {
 	var groups selectResp
+	var resultGroup []model.Group
 	groups.Page, _ = strconv.Atoi(c.Query("page"))
 	groups.PageSize, _ = strconv.Atoi(c.Query("page_size"))
 	if groups.Page==0 {
@@ -97,11 +99,19 @@ func SelectGroup(c *gin.Context) {
 	if groups.PageSize>30 || groups.PageSize==0 {
 		groups.PageSize=10
 	}
-	model.DB.Model(&groups.Result).Count(&groups.Total)
-	model.DB.Limit(groups.PageSize).Offset((groups.Page - 1) * groups.PageSize).Find(&groups.Result)
-	for k,v:=range groups.Result{
-		s:=time.Unix(v.CreatedAt,0).Format("2006-01-02 15:04:05")
-		groups.Result[k].FormatCreatedAt=s
+	model.DB.Model(&resultGroup).Count(&groups.Total)
+	model.DB.Limit(groups.PageSize).Offset((groups.Page - 1) * groups.PageSize).Find(&resultGroup)
+	groups.TotalPage=int(math.Ceil(float64(float64(groups.Total)/float64(groups.PageSize))))
+	ef:=make([]model.GroupResp,len(resultGroup))
+	for k,v:=range resultGroup{
+		createAt:=time.Unix(v.CreatedAt,0).Format("2006-01-02 15:04:05")
+		updateAt:=time.Unix(v.UpdatedAt,0).Format("2006-01-02 15:04:05")
+		ef[k].FormatCreatedAt=createAt
+		ef[k].FormatUpdatedAt=updateAt
+		ef[k].Name=v.Name
+		ef[k].Disable=v.Disable
+		ef[k].ID=v.ID
 	}
+	groups.Result=ef
 	utils.RespJsonOk("", groups, c)
 }

@@ -4,9 +4,9 @@ import "gorm.io/gorm"
 
 type DefaultField struct {
 	ID uint `json:"id" gorm:"primarykey"`
-	CreatedAt int64 `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt int64 `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	CreatedAt int64 `json:"created_at,omitempty" gorm:"autoCreateTime"`
+	UpdatedAt int64 `json:"updated_at,omitempty" gorm:"autoUpdateTime"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty"`
 }
 
 type User struct {

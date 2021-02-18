@@ -10,6 +10,7 @@ type Group struct {
 	Disable *int   `json:"disable" gorm:"type:tinyint(1);default:0" form:"disable" binding:"required" label:"是否禁用"`
 }
 
+//详情及查询返回结构体
 type GroupResp struct {
 	Group
 	FormatCreatedAt string `json:"format_create_time"`
