@@ -7,7 +7,7 @@ type Permission struct {
 	Path string `json:"path" form:"path" binding:"required" label:"路径"`
 	Pid *int `json:"pid" gorm:"type:int(10);default:0" form:"pid"`
 	Validate *int `json:"validate" gorm:"type:tinyint(1);default:0;comment:是否验证" form:"validate"`
-	GroupId *int `json:"group_id" grom:"type:int(10);default:0" form:"group_id"`
+	GroupId *int `json:"group_id" grom:"type:int(10);default:0" form:"group_id" binding:"required,gt=0" label:"组"`
 }
 
 //详情及查询返回结构体

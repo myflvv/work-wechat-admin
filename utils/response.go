@@ -14,6 +14,7 @@ type Resp struct {
 const (
 	Error_LackParams = 40001 //缺少请求参数
 	Error_BadParams = 40002 //请求参数错误
+	Error_Authorized=40003
 
 	Error_Server = 50000 //内部服务器错误
 )
